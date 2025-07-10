@@ -30,12 +30,12 @@ export function SidebarApp({ children }: { children: React.ReactNode }) {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="/">
-                    GETT/SUDIV
+                    NAP/GECONF
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Gestão de TIC</BreadcrumbPage>
+                  <BreadcrumbPage>Gestão de Pastas Funcionais</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

@@ -5,6 +5,7 @@ import {
   AudioWaveform,
   BookOpen,
   Bot,
+  ChartArea,
   Command,
   Frame,
   GalleryVerticalEnd,
@@ -35,89 +36,25 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Computadores",
-          url: "/admin/computadores",
+          title: "Pastas Funcionais",
+          url: "/admin/pastas-funcionais",
         },
         {
-          title: "Telefones",
-          url: "/admin/telefones",
+          title: "Envelopes",
+          url: "/admin/envelopes",
         },
-        {
-          title: "Impressoras",
-          url: "/admin/impressoras",
-        },
-        {
-          title: "Monitores",
-          url: "/admin/monitores",
-        },        
       ],
     },
     {
-      title: "Atendimentos",
+      title: "Gestão",
       url: "#",
-      icon: Bot,
+      icon: ChartArea,
       isActive: true,      
       items: [
         {
-          title: "Interno",
-          url: "/admin/internos",
-        },
-        {
-          title: "eDoc",
-          url: "/admin/edoc",
-        },
-        {
-          title: "Chamados (AGETEC)",
-          url: "/admin/chamados",
-        },
-        {
-          title: "Acessos",
-          url: "/admin/acessos",
-        },  
-        {
-          title: "Atas/Compras",
-          url: "/admin/atas-compras",
+          title: "Produtividade",
+          url: "/gestao/produtividade",
         },                 
-      ],
-    },
-    {
-      title: "Estoque",
-      url: "#",
-      icon: BookOpen,
-      isActive: true,      
-      items: [
-        {
-          title: "Movimentação",
-          url: "/admin/movimentacao",
-        },
-      ],
-    },
-    {
-      title: "Configuração",
-      url: "#",
-      icon: Settings2,
-      isActive: true,
-      items: [
-        {
-          title: "Setores",
-          url: "/admin/setores",
-        },
-        {
-          title: "Tipos de Impressoras",
-          url: "/admin/tipo-impressora",
-        },
-        {
-          title: "Sistemas",
-          url: "/admin/sistemas",
-        },
-        {
-          title: "Servidores",
-          url: "#",
-        },
-        {
-          title: "Periféricos",
-          url: "/admin/perifericos",
-        },        
       ],
     },
   ]
