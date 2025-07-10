@@ -1,0 +1,59 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Pencil, Plus } from "lucide-react";
+import type { Pedido, Sistema } from "@prisma/client";
+import { api } from "@/trpc/react";
+import CreateUpdate from "./createUpdate";
+
+export function ButtonModal({ action, data, sistemas }: { action?: string, data: Pedido | null, sistemas: Sistema[] }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Botão que abre o dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <div className={`flex ${action ? 'w-[130px]' : 'w-[40px]'}  justify-start`}>
+            <Button className="flex gap-2" variant={'secondary'}>
+              {action
+                ? <Plus className="w-4 h-4" />
+                : <Pencil className="w-4 h-4" />
+              }
+              {action}
+            </Button>
+          </div>
+        </DialogTrigger>
+
+        <DialogContent
+          className="
+            max-w-lg
+            max-h-[90vh]  // Altura máxima maior em dispositivos móveis
+            md:max-h-[80vh] 
+            flex 
+            flex-col 
+            overflow-hidden
+          ">
+          <DialogHeader>
+            <DialogTitle>Cadastrar Nova Solicitação</DialogTitle>
+            <DialogClose className="absolute top-3 right-3" />
+          </DialogHeader>
+
+          {/* Formulário dentro do dialog */}
+          <div className="overflow-y-auto pr-2 flex-grow">
+            <CreateUpdate data={data} onSuccess={() => setOpen(false)} sistemas={sistemas} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
