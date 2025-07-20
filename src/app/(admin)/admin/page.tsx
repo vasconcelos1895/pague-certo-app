@@ -12,7 +12,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <h2>Home</h2>
+      <h2>Página inicial do app.</h2>
     </HydrateClient>
   );
 }
