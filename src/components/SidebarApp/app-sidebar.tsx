@@ -2,16 +2,7 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
   ChartArea,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
   SquareTerminal,
 } from "lucide-react"
 
@@ -22,7 +13,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
 
@@ -34,14 +24,37 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
+      role: ["ADMIN"],
       items: [
         {
-          title: "Pastas Funcionais",
-          url: "/admin/pastas-funcionais",
+          title: "Provisão de Adicional",
+          url: "/admin/adicional-provisao",
+          role: ["ADMIN"],
         },
         {
-          title: "Envelopes",
-          url: "/admin/envelopes",
+          title: "Provisão de Perda",
+          url: "/admin/provisao-perda",
+          role: ["ADMIN"],
+        },
+        {
+          title: "Clientes",
+          url: "/admin/clientes",
+          role: ["ADMIN"],
+        },  
+        { 
+          title: "Operações",
+          url: "/admin/operacoes",
+          role: ["ADMIN"],
+        },
+        { 
+          title: "Instituições Financeiras",
+          url: "/admin/instituicoes-financeiras",
+          role: ["ADMIN"],
+        },        
+        { 
+          title: "Tipos de Recuperação",
+          url: "/admin/tipos-recuperacao",
+          role: ["ADMIN"],
         },
       ],
     },
@@ -49,11 +62,13 @@ const data = {
       title: "Gestão",
       url: "#",
       icon: ChartArea,
-      isActive: true,      
+      isActive: true, 
+      role: ["ADMIN","USER"],           
       items: [
         {
-          title: "Produtividade",
-          url: "/gestao/produtividade",
+          title: "Reestruturação de Passivo",
+          url: "#",
+          role: ["ADMIN","USER"],                     
         },                 
       ],
     },
