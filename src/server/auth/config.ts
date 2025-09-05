@@ -16,12 +16,12 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
-      role: "ADMIN" | "SUPERVISOR" | "AGENT";
+      role: "ADMIN" | "USER";
     } & DefaultSession["user"];
   }
 
   interface User {
-    role: "ADMIN" | "SUPERVISOR" | "AGENT";
+    role: "ADMIN" | "USER";
   }
 }
 
@@ -31,7 +31,6 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-  adapter: PrismaAdapter(db), 
   session: {
     strategy: "jwt",
   },  
@@ -73,24 +72,10 @@ export const authConfig = {
     },
     async session({ session, token }) {
       session.user.id = token.sub as string;
-      session.user.role = token.role as "ADMIN" | "SUPERVISOR" | "AGENT";
+      session.user.role = token.role as "ADMIN" | "USER";
       // Exponha o accessToken se quiser usá-lo no client (opcional)
       session.accessToken = token.accessToken as string;
       return session;
     },    
-    // session: ({ session, token }) => ({
-    //   ...session,
-    //   user: {
-    //     ...session.user,
-    //     id: token.sub,
-    //     role: token.role as "ADMIN" | "SUPERVISOR" | "AGENT",
-    //   },
-    // }),
-    // jwt: ({ token, user }) => {
-    //   if (user) {
-    //     token.role = user.role;
-    //   }
-    //   return token;
-    // },
   },
 } satisfies NextAuthConfig;

@@ -131,3 +131,35 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+export const createRoleProtectedProcedure = (
+  allowedRoles: Array<"ADMIN" | "USER">,
+) => {
+  return protectedProcedure.use(
+    t.middleware(({ ctx, next }) => {
+      if (
+        !ctx.session?.user?.role ||
+        !allowedRoles.includes(ctx.session.user.role)
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "Acesso negado. Você não tem permissão para realizar esta ação.",
+        });
+      }
+      return next({
+        ctx: {
+          session: { ...ctx.session, user: ctx.session.user },
+        },
+      });
+    }),
+  );
+};
+
+// Exemplos de procedimentos com roles específicas
+export const adminProcedure = createRoleProtectedProcedure(["ADMIN"]);
+export const userProcedure = createRoleProtectedProcedure(["USER"]);
+export const allRolesProcedure = createRoleProtectedProcedure([
+  "ADMIN",
+  "USER",
+]); // Geralmente todos autenticados

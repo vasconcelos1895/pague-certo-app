@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -43,13 +43,19 @@ model Session {
 }
 
 model User {
-    id             String           @id @default(cuid())
-    name           String?
-    email          String?          @unique
-    emailVerified  DateTime?
-    image          String?
-    accounts       Account[]
-    sessions       Session[]
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    role          Role      @default(USER)
+    accounts      Account[]
+    sessions      Session[]
+}
+
+enum Role {
+    USER
+    ADMIN
 }
 
 model VerificationToken {
@@ -58,4 +64,115 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Bank {
+    id        String   @id @default(cuid())
+    name      String
+    code      String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // Add any other fields you need
+
+    @@map("banks")
+}
+
+model Operation {
+    id          String   @id @default(cuid())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("operations")
+}
+
+model RecoveryType {
+    id          String   @id @default(cuid())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("recovery_types")
+}
+
+model ProvisionForIncurredLosse {
+    id              String   @id @default(cuid())
+    criteria        String
+    initialDeadline Float
+    finalDeadline   Float
+    percentageC1    Float
+    percentageC2    Float
+    percentageC3    Float
+    percentageC4    Float
+    percentageC5    Float
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    @@map("provision_for_incurred_losses")
+}
+
+model AdditionalProvisionLevel {
+    id              String   @id @default(cuid())
+    delayPeriod     String
+    initialDeadline Float
+    finalDeadline   Float
+    percentageC1    Float
+    percentageC2    Float
+    percentageC3    Float
+    percentageC4    Float
+    percentageC5    Float
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    @@map("additional_provision_levels")
+}
+
+model Client {
+    id                String       @id @default(uuid())
+    personType        PersonType   @default(PF) // PF = Natural Person, PJ = Legal Entity
+    name              String
+    tradeName         String? // for legal entities
+    document          String?       @unique // CPF or CNPJ (store without mask)
+    email             String?      @unique
+    primaryPhone      String?
+    secondaryPhone    String?
+    birthDate         DateTime? // for natural person
+    stateRegistration String? // for legal entities (inscrição estadual)
+    addressId         String?      @unique // optional FK to Address
+    address           Address?     @relation(fields: [addressId], references: [id])
+    status            ClientStatus @default(ATIVO) // e.g.: ACTIVE, INACTIVE, SUSPENDED
+    notes             String? // internal notes
+    createdAt         DateTime     @default(now())
+    updatedAt         DateTime     @updatedAt
+    deletedAt         DateTime? // example 1:N relation
+}
+
+enum ClientStatus {
+    ATIVO
+    INATIVO
+    SUSPENSO
+}
+
+enum PersonType {
+    PF
+    PJ
+}
+
+model Address {
+    id           String   @id @default(uuid())
+    client       Client?  @relation
+    clientId     String?
+    kind         String? // e.g.: residential, commercial
+    street       String?
+    number       String?
+    complement   String?
+    neighborhood String?
+    city         String?
+    state        String?
+    postal_code  String?
+    country      String?  @default("BR")
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 }
