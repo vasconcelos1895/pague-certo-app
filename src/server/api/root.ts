@@ -20,7 +20,7 @@ export const appRouter = createTRPCRouter({
   recoveryType: recoveryTypeRouter,
   provisionForIncurredLosse: provisionForIncurredLosseRouter,
   additionalProvisionLevel: additionalProvisionLevelRouter,
-  client: clientRouter,
+  customElementRegistry: clientRouter,
   address: addressRouter,
 });
 
