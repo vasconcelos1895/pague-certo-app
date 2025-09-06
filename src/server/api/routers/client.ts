@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+
 export const clientRouter = createTRPCRouter({
   list: publicProcedure.query(({ ctx }) =>
     ctx.db.client.findMany({ include: { address: true } })

@@ -67,32 +67,35 @@ model VerificationToken {
 }
 
 model Bank {
-    id        String   @id @default(cuid())
-    name      String
-    code      String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id                   String                 @id @default(cuid())
+    name                 String
+    code                 String                 @unique
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
     // Add any other fields you need
+    PassiveRestructuring PassiveRestructuring[]
 
     @@map("banks")
 }
 
 model Operation {
-    id          String   @id @default(cuid())
-    name        String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id                   String                 @id @default(cuid())
+    name                 String
+    description          String?
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
 
     @@map("operations")
 }
 
 model RecoveryType {
-    id          String   @id @default(cuid())
-    name        String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id                   String                 @id @default(cuid())
+    name                 String
+    description          String?
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
 
     @@map("recovery_types")
 }
@@ -134,7 +137,7 @@ model Client {
     personType        PersonType   @default(PF) // PF = Natural Person, PJ = Legal Entity
     name              String
     tradeName         String? // for legal entities
-    document          String?       @unique // CPF or CNPJ (store without mask)
+    document          String?      @unique // CPF or CNPJ (store without mask)
     email             String?      @unique
     primaryPhone      String?
     secondaryPhone    String?
@@ -147,6 +150,7 @@ model Client {
     createdAt         DateTime     @default(now())
     updatedAt         DateTime     @updatedAt
     deletedAt         DateTime? // example 1:N relation
+    Demand            Demand[]
 }
 
 enum ClientStatus {
@@ -175,4 +179,76 @@ model Address {
     country      String?  @default("BR")
     createdAt    DateTime @default(now())
     updatedAt    DateTime @updatedAt
+}
+
+model Demand {
+    id                   String                 @id @default(uuid())
+    client               Client                 @relation(fields: [clientId], references: [id])
+    clientId             String
+    responsible          String
+    priority             Priority               @default(BAIXA)
+    notes                String?
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
+    status              StatusPassiveRestructuring           @default(NAO_INICIADO)
+
+    @@map("demands")
+}
+
+enum Priority {
+    ALTA
+    MEDIA
+    BAIXA
+}
+
+model PassiveRestructuring {
+    id                    String         @id @default(cuid())
+    demandId              String
+    demand                Demand         @relation(fields: [demandId], references: [id])
+    bankId                String
+    bank                  Bank           @relation(fields: [bankId], references: [id])
+    operationId           String
+    operation             Operation      @relation(fields: [operationId], references: [id])
+    debtAmount            Float?
+    financialBalance      Float?
+    lastPayment           DateTime?
+    daysLate              Int?
+    monthsLate            Int?
+    recoveryTypeId        String
+    recoveryType          RecoveryType   @relation(fields: [recoveryTypeId], references: [id])
+    provisioning          Float?
+    amountProvisionedBank Float?
+    generatedLoss         GeneratedLoss? @default(NAO)
+    settlementProposal    Float?
+    finalAgreement        Float?
+    paymentPlan Float?
+    installments Int?
+    authority String?
+    office String?
+    Note String?
+    completionDate  DateTime?
+    timeInOffice   String?
+    debtReduction Float?
+    economicBenefit Float?
+    officeFee Float?
+    status StatusPassiveRestructuring @default(NAO_INICIADO)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("passive_restructurings")
+}
+
+enum GeneratedLoss {
+    SIM
+    NAO
+}
+
+enum StatusPassiveRestructuring {
+    NAO_INICIADO
+    EM_ANDAMENTO
+    CONCLUIDO
+    SUSPENSO
+    CANCELADO
 }

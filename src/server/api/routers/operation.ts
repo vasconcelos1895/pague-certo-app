@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+
 export const operationRouter = createTRPCRouter({
   list: publicProcedure.query(({ ctx }) => ctx.db.operation.findMany()),
 

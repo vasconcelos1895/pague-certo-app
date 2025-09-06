@@ -6,6 +6,8 @@ import { provisionForIncurredLosseRouter } from "./routers/provisionForIncurredL
 import { additionalProvisionLevelRouter } from "./routers/additionalProvisionLevel";
 import { clientRouter } from "./routers/client";
 import { addressRouter } from "./routers/address";
+import { demandRouter } from "./routers/demand";
+import { passiveRestructuringRouter } from "./routers/passiveRestructuring";
 
 
 /**
@@ -22,6 +24,8 @@ export const appRouter = createTRPCRouter({
   additionalProvisionLevel: additionalProvisionLevelRouter,
   customer: clientRouter,
   address: addressRouter,
+  demand: demandRouter,
+  passiveRestructuring: passiveRestructuringRouter,
 });
 
 // export type definition of API

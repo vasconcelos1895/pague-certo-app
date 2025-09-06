@@ -22,13 +22,13 @@ export const additionalProvisionLevelRouter = createTRPCRouter({
     .input(
       z.object({
         delayPeriod: z.string(),
-        initialDeadline: z.number(),
-        finalDeadline: z.number(),
-        percentageC1: z.number(),
-        percentageC2: z.number(),
-        percentageC3: z.number(),
-        percentageC4: z.number(),
-        percentageC5: z.number(),
+        initialDeadline: z.string().transform(v => parseFloat(v)),
+        finalDeadline: z.string().transform(v => parseFloat(v)),
+        percentageC1: z.string().transform(v => parseFloat(v)),
+        percentageC2: z.string().transform(v => parseFloat(v)),
+        percentageC3: z.string().transform(v => parseFloat(v)),
+        percentageC4: z.string().transform(v => parseFloat(v)),
+        percentageC5: z.string().transform(v => parseFloat(v)),
       })
     )
     .mutation(({ ctx, input }) =>
@@ -40,13 +40,13 @@ export const additionalProvisionLevelRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         delayPeriod: z.string().optional(),
-        initialDeadline: z.number().optional(),
-        finalDeadline: z.number().optional(),
-        percentageC1: z.number().optional(),
-        percentageC2: z.number().optional(),
-        percentageC3: z.number().optional(),
-        percentageC4: z.number().optional(),
-        percentageC5: z.number().optional(),
+        initialDeadline: z.string().transform(v => parseFloat(v)),
+        finalDeadline: z.string().transform(v => parseFloat(v)),
+        percentageC1: z.string().transform(v => parseFloat(v)),
+        percentageC2: z.string().transform(v => parseFloat(v)),
+        percentageC3: z.string().transform(v => parseFloat(v)),
+        percentageC4: z.string().transform(v => parseFloat(v)),
+        percentageC5: z.string().transform(v => parseFloat(v)),
       })
     )
     .mutation(({ ctx, input }) =>

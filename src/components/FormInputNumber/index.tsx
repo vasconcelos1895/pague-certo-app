@@ -11,17 +11,18 @@ interface ITextInputNumberProps extends React.InputHTMLAttributes<HTMLInputEleme
     name: string
     control: Control<any>
     label: string
+    scale?: number;
     placeholder?: string;
 }
 
 //
-export default function FormInputNumber({name, placeholder, control, label, ...rest}:ITextInputNumberProps):JSX.Element {
+export default function FormInputNumber({name, placeholder, control, label, scale, ...rest}:ITextInputNumberProps):JSX.Element {
     return (
         <FormField
             control={control}
             name={name}
             render={({ field: { onChange, name, value } }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="gap-1">
                     <FormLabel>
                         {label}
                     </FormLabel>
@@ -37,10 +38,9 @@ export default function FormInputNumber({name, placeholder, control, label, ...r
                             onValueChange={(v) => onChange(v.value)}
                             allowLeadingZeros={false}
                             allowNegative={false}
-                            decimalScale={2}
+                            decimalScale={scale ?? 2}
                             fixedDecimalScale
                             decimalSeparator=","
-                            prefix="R$ "
                             thousandSeparator="."
                         />
                     </FormControl>

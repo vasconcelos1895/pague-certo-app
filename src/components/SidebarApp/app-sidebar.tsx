@@ -36,11 +36,6 @@ const data = {
           url: "/admin/provisao-perda",
           role: ["ADMIN"],
         },
-        {
-          title: "Clientes",
-          url: "/admin/clientes",
-          role: ["ADMIN"],
-        },  
         { 
           title: "Operações",
           url: "/admin/operacoes",
@@ -66,8 +61,13 @@ const data = {
       role: ["ADMIN","USER"],           
       items: [
         {
+          title: "Clientes",
+          url: "/admin/clientes",
+          role: ["ADMIN"],
+        },          
+        {
           title: "Reestruturação de Passivo",
-          url: "#",
+          url: "/admin/demandas",
           role: ["ADMIN","USER"],                     
         },                 
       ],

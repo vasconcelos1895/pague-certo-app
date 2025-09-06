@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { type Control } from "react-hook-form";
 
-interface FormInputProps {
+interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
   control: Control<any>;
