@@ -14,6 +14,10 @@ export const addressRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => ctx.db.address.findUnique({ where: { id: input.id } })),
 
+  getByClientId: publicProcedure
+    .input(z.object({ clientId: z.string() }))
+    .query(({ ctx, input }) => ctx.db.address.findMany({ where: { clientId: input.clientId } })),    
+
   create: publicProcedure
     .input(
       z.object({

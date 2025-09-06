@@ -27,7 +27,7 @@ export default function TabContent({ activeTab, dataTab }: TabContentProps) {
 
     return (
         <>
-            <Tabs defaultValue={activeTab} className="w-full">
+            <Tabs defaultValue={activeTab} className="w-full" orientation="vertical">
                 <ScrollArea className="whitespace-nowrap overflow-hidden text-ellipsis ">              
                     <TabsList>
                             {dataTab.map(tab => (                    
@@ -39,7 +39,7 @@ export default function TabContent({ activeTab, dataTab }: TabContentProps) {
                                 </TabsTrigger>
                             ))}                    
                     </TabsList>
-                    <ScrollBar orientation="horizontal" /> 
+                    <ScrollBar orientation={"horizontal"} /> 
                 </ScrollArea>    
 
                 {dataTab.map(tab => (

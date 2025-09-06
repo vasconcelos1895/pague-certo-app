@@ -3,18 +3,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "@/components/FormInput";
-import { type BankFormValues, bankSchema } from "@/lib/validators/bank";
+import { type ModelFormValues, modelSchema } from "@/lib/validators/recoveryType";
 import { Button } from "@/components/ui/button";
+import { Save } from "lucide-react";
 
-interface BankFormProps {
-  defaultValues?: Partial<BankFormValues>;
-  onSubmit: (values: BankFormValues) => void;
+interface CrudFormProps {
+  defaultValues?: Partial<ModelFormValues>;
+  onSubmit: (values: ModelFormValues) => void;
   isLoading?: boolean;
 }
 
-export function BankForm({ defaultValues, onSubmit, isLoading }: BankFormProps) {
-  const form = useForm<BankFormValues>({
-    resolver: zodResolver(bankSchema),
+export function CrudForm({ defaultValues, onSubmit, isLoading }: CrudFormProps) {
+  const form = useForm<ModelFormValues>({
+    resolver: zodResolver(modelSchema),
     defaultValues,
   });
 
@@ -25,9 +26,10 @@ export function BankForm({ defaultValues, onSubmit, isLoading }: BankFormProps) 
         className="flex flex-col gap-4"
       >
         <FormInput name="name" label="Nome" control={form.control} />
-        <FormInput name="code" label="Código" control={form.control} />
+        <FormInput name="description" label="Descrição" control={form.control} />
 
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" variant={"secondary"} disabled={isLoading}>
+          <Save className="mr-2 h-4 w-4" />
           {isLoading ? "Salvando..." : "Salvar"}
         </Button>
       </form>

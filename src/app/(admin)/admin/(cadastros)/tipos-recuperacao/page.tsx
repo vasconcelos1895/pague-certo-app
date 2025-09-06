@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useState } from "react";
 import { type TableColumn } from "react-data-table-component";
-import { type BankFormValues } from "@/lib/validators/bank";
+import { type ModelFormValues } from "@/lib/validators/recoveryType";
 import { CrudForm } from "./components/crud-form";
 import {
   Dialog,
@@ -17,23 +17,21 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil, Plus, Trash } from "lucide-react";
 import { toast } from "sonner";
+import { type RecoveryType } from "@prisma/client";
 
-interface Bank {
-  id: string;
-  name: string;
-  code: string;
-}
-
-const defaultBankValues: BankFormValues = {
+const defaultRecordValues: ModelFormValues = {
   name: "",
-  code: "",
+  description: "",
 };
 
-function createTempBank(record: { name: string; code: string }) {
+function createTempRecord(record: {
+  name: string;
+  description?: string | null;
+}) {
   return {
     id: "temp-id-" + Math.random().toString(36).slice(2, 2 + 9),
     name: record.name,
-    code: record.code,
+    description: record.description ?? null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -41,93 +39,104 @@ function createTempBank(record: { name: string; code: string }) {
 
 export default function Page() {
   const utils = api.useUtils();
-  const { data: banks } = api.bank.list.useQuery();
+  const { data: recoveryTypes } = api.recoveryType.list.useQuery();
 
   // ✅ Optimistic Create + Toast
-  const createRecord = api.bank.create.useMutation({
+  const createRecord = api.recoveryType.create.useMutation({
     async onMutate(newRecord) {
-      await utils.bank.list.cancel();
-      const prevData = utils.bank.list.getData();
-      utils.bank.list.setData(undefined, (old) => [
+      await utils.recoveryType.list.cancel();
+      const prevData = utils.recoveryType.list.getData();
+      utils.recoveryType.list.setData(undefined, (old) => [
         ...(old ?? []),
-        createTempBank(newRecord),
+        createTempRecord(newRecord),
       ]);
       return { prevData };
     },
     onError: (err, _newRecord, ctx) => {
-      if (ctx?.prevData) utils.bank.list.setData(undefined, ctx.prevData);
-      toast.error(`Erro ao criar banco: ${err.message}`);
+      if (ctx?.prevData) utils.recoveryType.list.setData(undefined, ctx.prevData);
+      toast.error(`Erro ao criar registro: ${err.message}`);
     },
     onSuccess: () => {
-      toast.success("Banco criado com sucesso!");
+      toast.success("Registro criado com sucesso!");
     },
-    onSettled: () => utils.bank.list.invalidate(),
+    onSettled: () => utils.recoveryType.list.invalidate(),
   });
 
   // ✅ Optimistic Update + Toast
-  const updateRecord = api.bank.update.useMutation({
+  const updateRecord = api.recoveryType.update.useMutation({
     async onMutate(updatedRecord) {
-      await utils.bank.list.cancel();
-      const prevData = utils.bank.list.getData();
-      utils.bank.list.setData(undefined, (old) =>
+      await utils.recoveryType.list.cancel();
+      const prevData = utils.recoveryType.list.getData();
+      utils.recoveryType.list.setData(undefined, (old) =>
         (old ?? []).map((record) =>
-          record.id === updatedRecord.id ? { ...record, ...updatedRecord } : record,
+          record.id === updatedRecord.id
+            ? { ...record, ...updatedRecord }
+            : record,
         ),
       );
       return { prevData };
     },
     onError: (err, _updatedRecord, ctx) => {
-      if (ctx?.prevData) utils.bank.list.setData(undefined, ctx.prevData);
-      toast.error(`Erro ao atualizar banco: ${err.message}`);
+      if (ctx?.prevData) utils.recoveryType.list.setData(undefined, ctx.prevData);
+      toast.error(`Erro ao atualizar registro: ${err.message}`);
     },
     onSuccess: () => {
-      toast.success("Banco atualizado com sucesso!");
+      toast.success("Registro atualizado com sucesso!");
     },
-    onSettled: () => utils.bank.list.invalidate(),
+    onSettled: () => utils.recoveryType.list.invalidate(),
   });
 
   // ✅ Optimistic Delete + Toast
-  const deleteRecord = api.bank.delete.useMutation({
+  const deleteRecord = api.recoveryType.delete.useMutation({
     async onMutate({ id }) {
-      await utils.bank.list.cancel();
-      const prevData = utils.bank.list.getData();
-      utils.bank.list.setData(undefined, (old) =>
+      await utils.recoveryType.list.cancel();
+      const prevData = utils.recoveryType.list.getData();
+      utils.recoveryType.list.setData(undefined, (old) =>
         (old ?? []).filter((record) => record.id !== id),
       );
       return { prevData };
     },
     onError: (err, _deletedRecord, ctx) => {
-      if (ctx?.prevData) utils.bank.list.setData(undefined, ctx.prevData);
-      toast.error(`Erro ao excluir banco: ${err.message}`);
+      if (ctx?.prevData) utils.recoveryType.list.setData(undefined, ctx.prevData);
+      toast.error(`Erro ao excluir registro: ${err.message}`);
     },
     onSuccess: () => {
-      toast.success("Banco excluído com sucesso!");
+      toast.success("Registro excluído com sucesso!");
     },
-    onSettled: () => utils.bank.list.invalidate(),
+    onSettled: () => utils.recoveryType.list.invalidate(),
   });
 
-  const [editingRecord, setEditingRecord] = useState<Bank | null>(null);
+  const [editingRecord, setEditingRecord] = useState<RecoveryType | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSubmit = (values: BankFormValues) => {
+  const handleSubmit = (values: ModelFormValues) => {
+    const payload = {
+      ...values,
+      description: values.description ?? undefined, // ← aqui converte null para undefined
+    };
+
     if (editingRecord) {
-      updateRecord.mutate({ id: editingRecord.id, ...values });
+      updateRecord.mutate({ id: editingRecord.id, ...payload });
     } else {
-      createRecord.mutate(values);
+      createRecord.mutate(payload);
     }
     setIsOpen(false);
     setEditingRecord(null);
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Deseja realmente excluir este banco?")) {
+    if (confirm("Deseja realmente excluir este registro?")) {
       deleteRecord.mutate({ id });
     }
   };
 
-  const columns: TableColumn<Bank>[] = [
+  const columns: TableColumn<RecoveryType>[] = [
     { name: "Nome", selector: (row) => row.name, sortable: true },
-    { name: "Código", selector: (row) => row.code, sortable: true },
+    {
+      name: "Descrição",
+      selector: (row) => row.description ?? "",
+      sortable: true,
+    },
     {
       name: "Ações",
       cell: (row) => (
@@ -160,8 +169,8 @@ export default function Page() {
     <PageLayout
       index={false}
       link={"/admin"}
-      label={"Instituições Financeiras"}
-      description={"Listagem de instituições financeiras"}
+      label={"Tipos de Recuperação"}
+      description={"Listagem de tipos de recuperação"}
       notBreadcrumb={false}
     >
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -171,17 +180,17 @@ export default function Page() {
             variant={"secondary"}
             onClick={() => setEditingRecord(null)}
           >
-            <Plus className="h-4 w-4" /> Novo Banco
+            <Plus className="h-4 w-4" /> Novo Registro
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingRecord ? "Editar Banco" : "Novo Banco"}
+              {editingRecord ? "Editar Registro" : "Novo Registro"}
             </DialogTitle>
           </DialogHeader>
           <CrudForm
-            defaultValues={editingRecord ?? defaultBankValues}
+            defaultValues={editingRecord ?? defaultRecordValues}
             onSubmit={handleSubmit}
             isLoading={createRecord.isPending || updateRecord.isPending}
           />
@@ -190,8 +199,8 @@ export default function Page() {
 
       <DataTableApp
         columns={columns}
-        data={banks ?? []}
-        urlReport="/api/reports/banks"
+        data={recoveryTypes ?? []}
+        urlReport="/api/reports/operations"
       />
     </PageLayout>
   );

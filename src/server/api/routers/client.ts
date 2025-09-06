@@ -40,9 +40,16 @@ export const clientRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.string().optional(),
+        personType: z.enum(["PF", "PJ"]),
+        name: z.string(),
         tradeName: z.string().optional(),
-        email: z.string().optional(),
+        document: z.string().optional(),
+        email: z.string().email().optional(),
+        primaryPhone: z.string().optional(),
+        secondaryPhone: z.string().optional(),
+        birthDate: z.date().optional(),
+        stateRegistration: z.string().optional(),
+        notes: z.string().optional(),
         status: z.enum(["ATIVO", "INATIVO", "SUSPENSO"]).optional(),
       })
     )
