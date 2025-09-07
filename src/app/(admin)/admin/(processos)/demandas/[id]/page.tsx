@@ -4,10 +4,15 @@ import { DemandStatusCard } from "./components/demand-status-card";
 import { DemandPriorityCard } from "./components/demand-priority-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import PageClient from "./components/page-client";
 
-export default async function Page({params}: {params: {id: string}}) {
-  const { id } = params
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
   const demand = await api.demand.getById({id});
+  const passives = await api.passiveRestructuring.getByDemandId({demandId: demand?.id});
+  const operations = await api.operation.list();
+  const recoveryTypes = await api.recoveryType.list();
+  const banks = await api.bank.list();
 
   // ✅ Optimistic Cr
 
@@ -66,7 +71,12 @@ export default async function Page({params}: {params: {id: string}}) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-
+                    <PageClient 
+                        records={passives ?? []} 
+                        operations={operations ?? []} 
+                        recoveryTypes={recoveryTypes ?? []} 
+                        banks={banks ?? []} 
+                    />
                 </CardContent>
             </Card>            
         </div>)}

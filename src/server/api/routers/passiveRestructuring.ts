@@ -30,6 +30,21 @@ export const passiveRestructuringRouter = createTRPCRouter({
       });
     }),
 
+
+  getByDemandId: protectedProcedure
+    .input(z.object({ demandId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.passiveRestructuring.findMany({
+        where: { demandId: input.demandId },
+        include: {
+          demand: true,
+          bank: true,
+          operation: true,
+          recoveryType: true,
+        },
+      });
+    }),    
+
   create: protectedProcedure
     .input(
       z.object({
