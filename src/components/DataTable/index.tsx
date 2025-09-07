@@ -254,7 +254,10 @@ export function DataTableApp<T>({ columns, data, urlReport }: DataTableAppProps<
         resetPaginationToggle, 
         columns, 
         columnFilters,
-        isExporting
+        isExporting,
+        filteredItems, 
+        handleExport,
+        urlReport
     ]);
 
     return (

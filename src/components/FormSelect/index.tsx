@@ -27,7 +27,7 @@ export function FormSelect({ name, label, control, options }: FormSelectProps) {
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
               <SelectContent>
