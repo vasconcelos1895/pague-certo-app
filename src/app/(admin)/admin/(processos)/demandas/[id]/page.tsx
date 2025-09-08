@@ -72,6 +72,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 </CardHeader>
                 <CardContent>
                     <PageClient 
+                        demandId={id}
                         records={passives ?? []} 
                         operations={operations ?? []} 
                         recoveryTypes={recoveryTypes ?? []} 

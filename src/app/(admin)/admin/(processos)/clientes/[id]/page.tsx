@@ -14,7 +14,7 @@ export default function ClientPage({ params }: { params: Promise<{ id: string }>
     id,
   });  
 
-  const { data: addressData } = api.address.getByClientId.useQuery({ clientId: id });
+  //const { data: addressData } = api.address.getByClientId.useQuery({ clientId: id });
 
   if (isLoading) {
     return <div>Carregando...</div>;
@@ -61,7 +61,7 @@ export default function ClientPage({ params }: { params: Promise<{ id: string }>
                   </CardHeader>
                   <CardContent>
                       <div className="flex flex-col w-full md:max-w-xl">
-                        <AddressForm address={addressData?.[0] ?? null} clientId={id} />
+                        <AddressForm address={customerData.address ?? null} clientId={id} />
                       </div>                    
                   </CardContent>
               </Card> 

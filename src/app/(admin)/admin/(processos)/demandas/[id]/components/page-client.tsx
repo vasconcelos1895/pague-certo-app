@@ -80,11 +80,13 @@ const statusMap: Record<
 };
 
 export default function PageClient({
+  demandId,
   records,
   banks,
   operations,
   recoveryTypes,
 }: {
+  demandId: String,
   records: PassiveRestructuring[];
   banks: { id: string; name: string }[];
   operations: { id: string; name: string }[];
@@ -158,10 +160,14 @@ export default function PageClient({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = (values: typeof defaultRecordValues) => {
+    const payload = {
+      ...values,
+      demandId: demandId
+    }
     if (editingRecord) {
-      updateRecord.mutate({ id: editingRecord.id, ...values });
+      updateRecord.mutate({ id: editingRecord.id, ...payload });
     } else {
-      createRecord.mutate(values);
+      createRecord.mutate(payload);
     }
     setIsOpen(false);
     setEditingRecord(null);

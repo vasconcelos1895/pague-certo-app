@@ -2,12 +2,11 @@
 import { z } from "zod";
 
 export const passiveRestructuringSchema = z.object({
-  demandId: z.string().uuid(),
   bankId: z.string(),
   operationId: z.string(),
   recoveryTypeId: z.string(),
-  debtAmount: z.number().optional(),
-  financialBalance: z.number().optional(),
+  debtAmount: z.string().optional(),
+  financialBalance: z.string().optional(),
   lastPayment: z.date().optional(),
   daysLate: z.number().optional(),
   monthsLate: z.number().optional(),

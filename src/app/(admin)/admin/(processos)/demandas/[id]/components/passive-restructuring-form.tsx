@@ -40,16 +40,8 @@ export function PassiveRestructuringForm({
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 p-3"
       >
-        {/* Demanda */}
-        <FormSelect
-          name="demandId"
-          label="Demanda"
-          control={form.control}
-          options={demands.map((d) => ({ value: d.id, label: d.name }))}
-        />
-
         {/* Banco */}
         <FormSelect
           name="bankId"
@@ -74,33 +66,46 @@ export function PassiveRestructuringForm({
           options={recoveryTypes.map((r) => ({ value: r.id, label: r.name }))}
         />
 
-        {/* Valores */}
-        <FormInput
-          name="debtAmount"
-          label="Valor da Dívida"
-          type="number"
-          control={form.control}
-        />
-        <FormInput
-          name="financialBalance"
-          label="Saldo Financeiro"
-          type="number"
-          control={form.control}
-        />
+        {/* Valores financeiros */}
+        <FormInput name="debtAmount" label="Valor da Dívida" type="number" control={form.control} />
+        <FormInput name="financialBalance" label="Saldo Financeiro" type="number" control={form.control} />
 
         {/* Datas */}
-        <FormInput
-          name="lastPayment"
-          label="Último Pagamento"
-          type="date"
+        <FormInput name="lastPayment" label="Último Pagamento" type="date" control={form.control} />
+        <FormInput name="completionDate" label="Data de Conclusão" type="date" control={form.control} />
+
+        {/* Atrasos e provisões */}
+        <FormInput name="daysLate" label="Dias em Atraso" type="number" control={form.control} />
+        <FormInput name="monthsLate" label="Meses em Atraso" type="number" control={form.control} />
+        <FormInput name="provisioning" label="Provisão" type="number" control={form.control} />
+        <FormInput name="amountProvisionedBank" label="Valor Provisionado pelo Banco" type="number" control={form.control} />
+
+        {/* Perda Gerada */}
+        <FormSelect
+          name="generatedLoss"
+          label="Perda Gerada"
           control={form.control}
+          options={[
+            { value: "NAO", label: "Não" },
+            { value: "SIM", label: "Sim" },
+          ]}
         />
-        <FormInput
-          name="completionDate"
-          label="Data de Conclusão"
-          type="date"
-          control={form.control}
-        />
+
+        {/* Propostas e acordos */}
+        <FormInput name="settlementProposal" label="Proposta de Acordo" type="number" control={form.control} />
+        <FormInput name="finalAgreement" label="Acordo Final" type="number" control={form.control} />
+        <FormInput name="paymentPlan" label="Plano de Pagamento" type="number" control={form.control} />
+        <FormInput name="installments" label="Parcelas" type="number" control={form.control} />
+
+        {/* Escritório / Autoridade */}
+        <FormInput name="authority" label="Autoridade" type="text" control={form.control} />
+        <FormInput name="office" label="Escritório" type="text" control={form.control} />
+        <FormInput name="timeInOffice" label="Tempo no Escritório" type="text" control={form.control} />
+
+        {/* Benefícios / taxas */}
+        <FormInput name="debtReduction" label="Redução da Dívida" type="number" control={form.control} />
+        <FormInput name="economicBenefit" label="Benefício Econômico" type="number" control={form.control} />
+        <FormInput name="officeFee" label="Honorário do Escritório" type="number" control={form.control} />
 
         {/* Status */}
         <FormSelect
@@ -116,17 +121,6 @@ export function PassiveRestructuringForm({
           ]}
         />
 
-        {/* Perda Gerada */}
-        <FormSelect
-          name="generatedLoss"
-          label="Perda Gerada"
-          control={form.control}
-          options={[
-            { value: "NAO", label: "Não" },
-            { value: "SIM", label: "Sim" },
-          ]}
-        />
-
         {/* Observações */}
         <div>
           <label className="block text-sm font-medium mb-1">Observações</label>
@@ -137,6 +131,7 @@ export function PassiveRestructuringForm({
           />
         </div>
 
+        {/* Botão */}
         <Button type="submit" variant="secondary" disabled={isLoading}>
           <Save className="mr-2 h-4 w-4" />
           {isLoading ? "Salvando..." : "Salvar"}

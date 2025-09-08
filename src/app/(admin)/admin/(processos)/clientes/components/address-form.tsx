@@ -12,6 +12,38 @@ import {
   addressSchema,
 } from "@/lib/validators/customer";
 import { type Address } from "@prisma/client";
+import { FormSelect } from "@/components/FormSelect";
+
+const estados = [
+      {"label": "Acre", "value": "AC"},
+      {"label": "Alagoas", "value": "AL"},
+      {"label": "Amapá", "value": "AP"},
+      {"label": "Amazonas", "value": "AM"},
+      {"label": "Bahia", "value": "BA"},
+      {"label": "Ceará", "value": "CE"},
+      {"label": "Distrito Federal", "value": "DF"},
+      {"label": "Espírito Santo", "value": "sES"},
+      {"label": "Goiás", "value": "GO"},
+      {"label": "Maranhão", "value": "MA"},
+      {"label": "Mato Grosso", "value": "MT"},
+      {"label": "Mato Grosso do Sul", "value": "MS"},
+      {"label": "Minas Gerais", "value": "MG"},
+      {"label": "Pará", "value": "PA"},
+      {"label": "Paraíba", "value": "PB"},
+      {"label": "Paraná", "value": "PR"},
+      {"label": "Pernambuco", "value": "PE"},
+      {"label": "Piauí", "value": "PI"},
+      {"label": "Rio de Janeiro", "value": "RJ"},
+      {"label": "Rio Grande do Norte", "value": "RN"},
+      {"label": "Rio Grande do Sul", "value": "RS"},
+      {"label": "Rondônia", "value": "RO"},
+      {"label": "Roraima", "value": "RR"},
+      {"label": "Santa Catarina", "value": "SC"},
+      {"label": "São Paulo", "value": "SP"},
+      {"label": "Sergipe", "value": "SE"},
+      {"label": "Tocantins", "value": "TO"}
+
+  ]
 
 
 export function AddressForm({ address, clientId }: { address: Address | null, clientId: string }) {
@@ -61,13 +93,29 @@ export function AddressForm({ address, clientId }: { address: Address | null, cl
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <FormInput name="kind" label="Tipo" control={form.control} />
-        <FormInput name="street" label="Rua" control={form.control} />
+        <FormSelect
+          name="kind"
+          label="Tipo"
+          control={form.control}
+          options={[
+            { label: "Comercial", value: "Comercial" },
+            { label: "Residencial", value: "Residencial" },
+          ]}
+        />
+
+        <FormInput name="street" label="Logradouro" control={form.control} />
         <FormInput name="number" label="Número" control={form.control} />
         <FormInput name="complement" label="Complemento" control={form.control} />
         <FormInput name="neighborhood" label="Bairro" control={form.control} />
         <FormInput name="city" label="Cidade" control={form.control} />
-        <FormInput name="state" label="Estado" control={form.control} />
+
+        <FormSelect
+          name="state"
+          label="UF"
+          control={form.control}
+          options={estados}
+        />
+
         <FormInput name="postal_code" label="CEP" control={form.control} />
         <FormInput name="country" label="País" control={form.control} />
 

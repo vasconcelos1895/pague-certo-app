@@ -12,7 +12,7 @@ datasource db {
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL_MYSQL")
+    url      = env("DATABASE_URL")
 }
 
 
@@ -170,7 +170,7 @@ enum PersonType {
 
 model Address {
     id           String   @id @default(uuid()) @db.VarChar(191)
-    client       Client?  @relation
+    client       Client[]
     kind         String?  @db.VarChar(191)
     street       String?  @db.VarChar(191)
     number       String?  @db.VarChar(191)
