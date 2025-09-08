@@ -33,9 +33,12 @@ const defaultRecordValues = {
   demandId: "",
   bankId: "",
   operationId: "",
+  lastPayment: "",
+  completionDate: ""  ,
   recoveryTypeId: "",
   debtAmount: 0,
   financialBalance: 0,
+  installments: "0",
   status: "NAO_INICIADO" as const,
 };
 
@@ -162,7 +165,12 @@ export default function PageClient({
   const handleSubmit = (values: typeof defaultRecordValues) => {
     const payload = {
       ...values,
-      demandId: demandId
+      demandId: demandId,
+      lastPayment: values.lastPayment ? new Date(values.lastPayment) : undefined,   
+      debtAmount: values.debtAmount ? Number(values.debtAmount) : 0,
+      financialBalance: values.financialBalance ? Number(values.financialBalance) : 0,      
+      installments: values.installments ? Number(values.installments) : 0,            
+      completionDate: values.completionDate ? new Date(values.completionDate) : undefined,      
     }
     if (editingRecord) {
       updateRecord.mutate({ id: editingRecord.id, ...payload });
