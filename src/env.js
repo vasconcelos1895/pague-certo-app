@@ -17,6 +17,12 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    // Agora você tem dois bancos
+    //DATABASE_URL_MYSQL: z.string().url(),
+    //DATABASE_URL_POSTGRES: z.string().url(),
+
+    // Para selecionar qual usar
+    //DATABASE_PROVIDER: z.enum(["mysql", "postgresql"]).default("mysql"),      
   },
 
   /**
@@ -36,7 +42,10 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.DATABASE_URL,    
+    // DATABASE_URL_MYSQL: process.env.DATABASE_URL_MYSQL,
+    // DATABASE_URL_POSTGRES: process.env.DATABASE_URL_POSTGRES,
+    // DATABASE_PROVIDER: process.env.DATABASE_PROVIDER,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

@@ -14,7 +14,7 @@
     "prisma:migrate:dev:mysql": "prisma migrate dev --schema=prisma/schema.mysql.prisma",
     "prisma:migrate:dev:pg": "prisma migrate dev --schema=prisma/schema.postgres.prisma",
     "prisma:push:mysql": "prisma db push --schema=prisma/schema.mysql.prisma",
-    "prisma:push:pg": "prisma db push --schema=prisma/schema.postgres.prisma", 
+    "prisma:push:pg": "prisma db push --schema=prisma/schema.postgres.prisma",
     "db:studio": "prisma studio",
     "dev": "next dev --turbo",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",

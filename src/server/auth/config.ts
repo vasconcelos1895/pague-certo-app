@@ -1,4 +1,5 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
+//import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "./adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
@@ -34,6 +35,7 @@ export const authConfig = {
   session: {
     strategy: "jwt",
   },  
+  adapter: PrismaAdapter,  
   providers: [
     DiscordProvider,
     GoogleProvider({
@@ -58,7 +60,6 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-  adapter: PrismaAdapter(db),
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && account.provider === "google") {
