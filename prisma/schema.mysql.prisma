@@ -1,0 +1,261 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL_MYSQL")
+}
+
+
+// Necessary for Next auth
+model Account {
+    id                       String  @id @default(cuid()) @db.VarChar(191)
+    userId                   String  @db.VarChar(191)
+    type                     String  @db.VarChar(191)
+    provider                 String  @db.VarChar(191)
+    providerAccountId        String  @db.VarChar(191)
+    refresh_token            String? @db.Text
+    access_token             String? @db.Text
+    expires_at               Int?
+    token_type               String? @db.VarChar(191)
+    scope                    String? @db.VarChar(191)
+    id_token                 String? @db.Text
+    session_state            String? @db.VarChar(191)
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    refresh_token_expires_in Int?
+
+    @@unique([provider, providerAccountId])
+    @@index([userId])
+}
+
+model Session {
+    id           String   @id @default(cuid()) @db.VarChar(191)
+    sessionToken String   @unique @db.VarChar(191)
+    userId       String   @db.VarChar(191)
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model User {
+    id            String    @id @default(cuid()) @db.VarChar(191)
+    name          String?   @db.VarChar(191)
+    email         String?   @unique @db.VarChar(191)
+    emailVerified DateTime?
+    image         String?   @db.VarChar(191)
+    role          Role      @default(USER)
+    accounts      Account[]
+    sessions      Session[]
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+model VerificationToken {
+    identifier String   @db.VarChar(191)
+    token      String   @unique @db.VarChar(191)
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Bank {
+    id                   String                 @id @default(cuid()) @db.VarChar(191)
+    name                 String                 @db.VarChar(191)
+    code                 String                 @unique @db.VarChar(191)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
+
+    @@map("banks")
+}
+
+model Operation {
+    id                   String                 @id @default(cuid()) @db.VarChar(191)
+    name                 String                 @db.VarChar(191)
+    description          String?                @db.VarChar(191)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
+
+    @@map("operations")
+}
+
+model RecoveryType {
+    id                   String                 @id @default(cuid()) @db.VarChar(191)
+    name                 String                 @db.VarChar(191)
+    description          String?                @db.VarChar(191)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
+
+    @@map("recovery_types")
+}
+
+model ProvisionForIncurredLosse {
+    id              String   @id @default(cuid()) @db.VarChar(191)
+    criteria        String   @db.VarChar(191)
+    initialDeadline Float
+    finalDeadline   Float
+    percentageC1    Float
+    percentageC2    Float
+    percentageC3    Float
+    percentageC4    Float
+    percentageC5    Float
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    @@map("provision_for_incurred_losses")
+}
+
+model AdditionalProvisionLevel {
+    id              String   @id @default(cuid()) @db.VarChar(191)
+    delayPeriod     String   @db.VarChar(191)
+    initialDeadline Float
+    finalDeadline   Float
+    percentageC1    Float
+    percentageC2    Float
+    percentageC3    Float
+    percentageC4    Float
+    percentageC5    Float
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    @@map("additional_provision_levels")
+}
+
+model Client {
+    id                String       @id @default(uuid()) @db.VarChar(191)
+    personType        PersonType   @default(PF) // PF = Natural Person, PJ = Legal Entity
+    name              String       @db.VarChar(191)
+    tradeName         String?      @db.VarChar(191) // for legal entities
+    document          String?      @unique @db.VarChar(191) // CPF or CNPJ (store without mask)
+    email             String?      @unique @db.VarChar(191)
+    primaryPhone      String?      @db.VarChar(191)
+    secondaryPhone    String?      @db.VarChar(191)
+    birthDate         DateTime? // for natural person
+    stateRegistration String?      @db.VarChar(191) // for legal entities (inscrição estadual)
+    addressId         String?      @unique @db.VarChar(191) // optional FK to Address
+    address           Address?     @relation(fields: [addressId], references: [id]) // CORRIGIDO: definition of relation here
+    status            ClientStatus @default(ATIVO) // e.g.: ACTIVE, INACTIVE, SUSPENDED
+    notes             String?      @db.VarChar(191) // internal notes
+    createdAt         DateTime     @default(now())
+    updatedAt         DateTime     @updatedAt
+    deletedAt         DateTime? // example 1:N relation
+    Demand            Demand[]
+}
+
+enum ClientStatus {
+    ATIVO
+    INATIVO
+    SUSPENSO
+}
+
+enum PersonType {
+    PF
+    PJ
+}
+
+model Address {
+    id           String   @id @default(uuid()) @db.VarChar(191)
+    client       Client?  @relation
+    kind         String?  @db.VarChar(191)
+    street       String?  @db.VarChar(191)
+    number       String?  @db.VarChar(191)
+    complement   String?  @db.VarChar(191)
+    neighborhood String?  @db.VarChar(191)
+    city         String?  @db.VarChar(191)
+    state        String?  @db.VarChar(191)
+    postal_code  String?  @db.VarChar(191)
+    country      String?  @default("BR") @db.VarChar(191)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+}
+
+model Demand {
+    id                   String                 @id @default(uuid()) @db.VarChar(191)
+    client               Client                 @relation(fields: [clientId], references: [id])
+    clientId             String                 @db.VarChar(191)
+    responsible          String                 @db.VarChar(191)
+    priority             Priority               @default(BAIXA)
+    notes                String?                @db.VarChar(191)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    PassiveRestructuring PassiveRestructuring[]
+    status               StatusPassiveRestructuring @default(NAO_INICIADO)
+
+    @@map("demands")
+    @@index([clientId])
+}
+
+enum Priority {
+    ALTA
+    MEDIA
+    BAIXA
+}
+
+model PassiveRestructuring {
+    id                    String         @id @default(cuid()) @db.VarChar(191)
+    demandId              String         @db.VarChar(191)
+    demand                Demand         @relation(fields: [demandId], references: [id])
+    bankId                String         @db.VarChar(191)
+    bank                  Bank           @relation(fields: [bankId], references: [id])
+    operationId           String         @db.VarChar(191)
+    operation             Operation      @relation(fields: [operationId], references: [id])
+    debtAmount            Float?
+    financialBalance      Float?
+    lastPayment           DateTime?
+    daysLate              Int?
+    monthsLate            Int?
+    recoveryTypeId        String         @db.VarChar(191)
+    recoveryType          RecoveryType   @relation(fields: [recoveryTypeId], references: [id])
+    provisioning          Float?
+    amountProvisionedBank Float?
+    generatedLoss         GeneratedLoss? @default(NAO)
+    settlementProposal    Float?
+    finalAgreement        Float?
+    paymentPlan           Float?
+    installments          Int?
+    authority             String?        @db.VarChar(191)
+    office                String?        @db.VarChar(191)
+    Note                  String?        @db.VarChar(191)
+    completionDate        DateTime?
+    timeInOffice          String?        @db.VarChar(191)
+    debtReduction         Float?
+    economicBenefit       Float?
+    officeFee             Float?
+    status                StatusPassiveRestructuring @default(NAO_INICIADO)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("passive_restructurings")
+    @@index([demandId])
+    @@index([bankId])
+    @@index([operationId])
+    @@index([recoveryTypeId])
+}
+
+enum GeneratedLoss {
+    SIM
+    NAO
+}
+
+enum StatusPassiveRestructuring {
+    NAO_INICIADO
+    EM_ANDAMENTO
+    CONCLUIDO
+    SUSPENSO
+    CANCELADO
+}
