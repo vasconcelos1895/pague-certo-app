@@ -29,27 +29,6 @@ import { type PassiveRestructuring } from "@prisma/client";
 import { PassiveRestructuringForm } from "./passive-restructuring-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const defaultRecordValues = {
-  demandId: "",
-  bankId: "",
-  operationId: "",
-  lastPayment: "",
-  completionDate: ""  ,
-  recoveryTypeId: "",
-  debtAmount: 0,
-  financialBalance: 0,
-  installments: "0",
-  status: "NAO_INICIADO" as const,
-};
-
-function createTempRecord(record: typeof defaultRecordValues) {
-  return {
-    id: "temp-id-" + Math.random().toString(36).slice(2, 11),
-    ...record,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as PassiveRestructuring;
-}
 
 const statusMap: Record<
   string,
@@ -82,6 +61,34 @@ const statusMap: Record<
   },
 };
 
+
+const defaultRecordValues = {
+  demandId: "",
+  bankId: "",
+  operationId: "",
+  recoveryTypeId: "",
+  debtAmount: 0,
+  financialBalance: 0,
+  lastPayment: "",
+  settlementProposal: "",
+  finalAgreement: "",
+  installments: "0",
+  authority: "",
+  office: "",
+  Note: "",
+  completionDate: ""  ,
+  status: "NAO_INICIADO" as const,
+};
+
+function createTempRecord(record: typeof defaultRecordValues) {
+  return {
+    id: "temp-id-" + Math.random().toString(36).slice(2, 11),
+    ...record,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as PassiveRestructuring;
+}
+
 export default function PageClient({
   demandId,
   records,
@@ -89,7 +96,7 @@ export default function PageClient({
   operations,
   recoveryTypes,
 }: {
-  demandId: String,
+  demandId: string,
   records: PassiveRestructuring[];
   banks: { id: string; name: string }[];
   operations: { id: string; name: string }[];
@@ -189,6 +196,20 @@ export default function PageClient({
 
   const columns: TableColumn<PassiveRestructuring>[] = [
     {
+      name: "Registrado em",
+      selector: (row) =>
+        row.createdAt
+          ? new Date(row.createdAt).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              minute: "2-digit",
+              hour: "2-digit",
+          })
+          : "",
+      sortable: true,
+    },    
+    {
       name: "Banco",
       selector: (row) => row.bank?.name ?? "",
       sortable: true,
@@ -199,10 +220,48 @@ export default function PageClient({
       sortable: true,
     },
     {
-      name: "Saldo",
-      selector: (row) => row.financialBalance?.toLocaleString("pt-BR") ?? "",
+      name: "Valor da divida",
+      selector: (row) => row.debtAmount?.toLocaleString("pt-BR", { minimumFractionDigits: 2 }) ?? "",
+      sortable: true,
+    },    
+    {
+      name: "Registrato",
+      selector: (row) => row.financialBalance?.toLocaleString("pt-BR", { minimumFractionDigits: 2 }) ?? "",
       sortable: true,
     },
+    {
+      name: "Dt. do ultimo pagamento",
+      selector: (row) =>
+        row.createdAt
+          ? new Date(row.lastPayment).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+          })
+          : "",
+      sortable: true,
+    },        
+    {
+      name: "Dias em atraso",
+      selector: (row) => {
+        const diff = calcularDiferencaEmDiasOuMeses(new Date(), new Date(row.lastPayment), false);
+
+        return diff
+      } 
+    },        
+    {
+      name: "Meses em atraso",
+      selector: (row) => {
+        const diff = calcularDiferencaEmDiasOuMeses(new Date(), new Date(row.lastPayment), true);
+
+        return diff
+      } 
+    },  
+    {
+      name: "Classificação",
+      selector: (row) => row?.recoveryType.name ?? "",
+      sortable: true,
+    },                  
     {
       name: "Status",
       cell: (row) => {
@@ -220,14 +279,6 @@ export default function PageClient({
           </Badge>
         );
       },
-    },
-    {
-      name: "Criado em",
-      selector: (row) =>
-        row.createdAt
-          ? new Date(row.createdAt).toLocaleDateString("pt-BR")
-          : "",
-      sortable: true,
     },
     {
       name: "Ações",
@@ -297,4 +348,16 @@ export default function PageClient({
       />
     </>
   );
+}
+
+function calcularDiferencaEmDiasOuMeses(data1: Date, data2: Date, meses: boolean): number {
+  const milissegundosPorDia = 1000 * 60 * 60 * 24; // 1 dia em milissegundos
+  const diferencaEmMilissegundos = Math.abs(data2.getTime() - data1.getTime()); // Diferença absoluta em milissegundos
+  const diferencaEmDias = diferencaEmMilissegundos / milissegundosPorDia;
+
+  if (meses) {
+    return Math.floor(diferencaEmDias / 30);
+  }
+
+  return diferencaEmDias.toFixed(0);
 }

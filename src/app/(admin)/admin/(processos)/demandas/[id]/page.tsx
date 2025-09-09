@@ -5,6 +5,10 @@ import { DemandPriorityCard } from "./components/demand-priority-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PageClient from "./components/page-client";
+import { DataTableApp } from "@/components/DataTable";
+import { columns } from "./components/columns";
+import { ButtonModal } from "./components/button-modal";
+import PassiveCard from "./components/passive-card";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -24,7 +28,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       description={`Análise e reestruturação de passivo do cliente.`}
       notBreadcrumb={false}
     >
-        {demand && (<div className="flex flex-col gap-4">
+        {demand && 
+        (<div className="flex flex-col gap-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <DemandStatusCard status={demand.status} />             
                 <DemandPriorityCard status={demand.priority} />   
@@ -71,13 +76,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <PageClient 
-                        demandId={id}
-                        records={passives ?? []} 
-                        operations={operations ?? []} 
-                        recoveryTypes={recoveryTypes ?? []} 
-                        banks={banks ?? []} 
-                    />
+                    <ButtonModal action="Novo Registro" data={null} demandId={demand.id}/>
+                    <PassiveCard passiveRestructuring={passives} />
                 </CardContent>
             </Card>            
         </div>)}
