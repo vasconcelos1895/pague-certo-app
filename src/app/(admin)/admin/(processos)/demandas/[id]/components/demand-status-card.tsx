@@ -12,17 +12,17 @@ const statusMap: Record<
 > = {
   NAO_INICIADO: {
     label: "Não iniciado",
-    color: "border-gray-100 text-gray-800",
+    color: "bg-gray-50 border-gray-200 text-gray-800",
     icon: <Clock className="h-6 w-6" />,
   },
   EM_ANDAMENTO: {
     label: "Em andamento",
-    color: "border-blue-100 text-blue-800",
+    color: "bg-blue-50 border-blue-200 text-blue-800",
     icon: <MoreHorizontalIcon className="h-6 w-6" />,
   },
   CONCLUIDO: {
     label: "Concluído",
-    color: "border-green-100 text-green-800",
+    color: "bg-green-50 border-green-200 text-green-800",
     icon: <CheckCircle2 className="h-6 w-6" />,
   },
 };

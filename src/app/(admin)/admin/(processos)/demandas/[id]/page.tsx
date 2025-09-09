@@ -4,21 +4,15 @@ import { DemandStatusCard } from "./components/demand-status-card";
 import { DemandPriorityCard } from "./components/demand-priority-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import PageClient from "./components/page-client";
-import { DataTableApp } from "@/components/DataTable";
-import { columns } from "./components/columns";
 import { ButtonModal } from "./components/button-modal";
-import PassiveCard from "./components/passive-card";
+import { Badge } from "@/components/ui/badge";
+import { Ban, Calculator, CheckCircle2, Clock, MoreHorizontalIcon, PauseCircle } from "lucide-react";
+import PassiveCard from "./components/PassiveCard/passive-card";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
   const demand = await api.demand.getById({id});
   const passives = await api.passiveRestructuring.getByDemandId({demandId: demand?.id});
-  const operations = await api.operation.list();
-  const recoveryTypes = await api.recoveryType.list();
-  const banks = await api.bank.list();
-
-  // ✅ Optimistic Cr
 
   return (
     <PageLayout
@@ -77,6 +71,21 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 </CardHeader>
                 <CardContent>
                     <ButtonModal action="Novo Registro" data={null} demandId={demand.id}/>
+                    <Separator className="my-4" />
+                    <p className="text-xs mb-1 ml-1 text-muted-foreground">
+                        LEGENDA: 
+                    </p>
+                    <div className="flex gap-2">
+                        {statusMap?.map((sm, i) => (
+                            <Badge
+                                key={i}
+                                className={`flex items-center rounded-sm px-2 py-1 ${sm?.color}`}
+                            >
+                                {sm?.icon}
+                                {sm?.label}
+                            </Badge>
+                        ))}
+                    </div>
                     <PassiveCard passiveRestructuring={passives} />
                 </CardContent>
             </Card>            
@@ -84,3 +93,37 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     </PageLayout>
   );
 }
+
+const statusMap: { label: string; color: string; icon: React.ReactNode }[] = [ 
+  {
+    label: "Não iniciado",
+    color: "bg-gray-200 text-gray-800",
+    icon: <Clock className="mr-1 h-4 w-4" />,
+  },
+  {
+    label: "Em andamento",
+    color: "bg-blue-200 text-blue-800",
+    icon: <MoreHorizontalIcon className="mr-1 h-4 w-4" />,
+  },
+  {
+    label: "Concluído",
+    color: "bg-green-200 text-green-800",
+    icon: <CheckCircle2 className="mr-1 h-4 w-4" />,
+  },
+  {
+    label: "Suspenso",
+    color: "bg-yellow-200 text-yellow-800",
+    icon: <PauseCircle className="mr-1 h-4 w-4" />,
+  },
+  {
+    label: "Cancelado",
+    color: "bg-red-200 text-red-800",
+    icon: <Ban className="mr-1 h-4 w-4" />,
+  },
+  ,
+  {
+    label: "Campo Calculado",
+    color: "bg-purple-200 text-purple-800",
+    icon: <></>,
+  },  
+];

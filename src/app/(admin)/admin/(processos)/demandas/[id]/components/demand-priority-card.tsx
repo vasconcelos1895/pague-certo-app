@@ -12,17 +12,17 @@ const statusMap: Record<
 > = {
   BAIXA: {
     label: "Baixa",
-    color: "border-yellow-200 text-yellow-800",
+    color: "bg-yellow-50 border-yellow-200 text-yellow-800",
     icon: <ArrowBigDownDash className="h-4 w-4 mr-1" />,
   },
   MEDIA: {
     label: "Média",
-    color: "border-orange-200 text-orange-800",
+    color: "bg-orange-50 border-orange-200 text-orange-800",
     icon: <UnfoldVertical className="h-4 w-4 mr-1" />,
   },
   ALTA: {
     label: "Alta",
-    color: "border-red-200 text-red-800",
+    color: "bg-red-50 border-red-200 text-red-800",
     icon: <ArrowBigUpDash className="h-4 w-4 mr-1" />,
   },
 };

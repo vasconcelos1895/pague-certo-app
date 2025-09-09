@@ -45,15 +45,15 @@ export default function CrudForm({
         operationId: data?.operationId ?? "",
         recoveryTypeId: data?.recoveryTypeId ?? "",
         debtAmount: data?.debtAmount?.toString() ?? 0,
-        financialBalance: data?.financialBalance.toString() ?? 0,
-        lastPayment: data?.lastPayment ? new Date(data.lastPayment).toISOString() : "",
-        settlementProposal: data?.settlementProposal ?? "",
-        finalAgreement: data?.finalAgreement ?? "",
-        installments: data?.installments.toString() ?? "0",
+        financialBalance: data?.financialBalance?.toString() ?? 0,
+        lastPayment: data?.lastPayment ? new Date(data.lastPayment).toISOString().split("T")[0] : "",
+        settlementProposal: data?.settlementProposal?.toString() ?? "",
+        finalAgreement: data?.finalAgreement?.toString() ?? "",
+        installments: data?.installments?.toString() ?? "0",
         authority: data?.authority ?? "",
         office: data?.office ?? "",
         Note: data?.Note ?? "",
-        completionDate: data?.completionDate ?? ""  ,
+        completionDate: data?.completionDate ? new Date(data.completionDate).toISOString().split("T")[0] : "",
         status: data?.status ?? "NAO_INICIADO" as const,        
     }
   });
@@ -62,9 +62,9 @@ export default function CrudForm({
   const createRecord = api.passiveRestructuring.create.useMutation({
     onSuccess() {
       form.reset();
-      onSuccess?.();
       toast.success("Registro salvo com sucesso");
       router.refresh();
+      onSuccess?.();
     },
     onError(error) {
       console.error("Erro ao criar registro.", error.message);
@@ -75,9 +75,9 @@ export default function CrudForm({
   const updateRecord = api.passiveRestructuring.update.useMutation({
     onSuccess() {
       form.reset();
-      onSuccess?.();
       toast.success("Registro atualizada com sucesso");
       router.refresh();
+      onSuccess?.();
     },
     onError(error) {
       console.error("Erro ao atualizar registro.", error.message);
@@ -95,7 +95,7 @@ export default function CrudForm({
           financialBalance: formData.financialBalance ? Number(formData.financialBalance) : 0,      
           installments: formData.installments ? Number(formData.installments) : 0,            
           settlementProposal: formData.settlementProposal ? Number(formData.settlementProposal) : 0,      
-          finalAgreement: formData.finalAgreement ? Number(formData.finalAgreement) : 0,                      
+          finalAgreement: formData.finalAgreement ? Number(formData.finalAgreement) : 0,                                
           completionDate: formData.completionDate ? new Date(formData.completionDate) : undefined,          
       }
 
@@ -114,7 +114,7 @@ export default function CrudForm({
   };
 
   if (isLoadingBanks || isLoadingOperations || isLoadingRecoveryTypes) {
-    return <div className="text-center gap-2"><Loader2 className="h-6 w-6 animate-spin text-zinc-600 mb-4" />Carregando ...</div>;
+    return <div className="flex items-center justify-center gap-2"><Loader2 className="h-6 w-6 animate-spin text-zinc-600 mb-4" />Carregando ...</div>;
   }  
 
   return (
