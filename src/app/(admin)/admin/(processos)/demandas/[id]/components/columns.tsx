@@ -1,9 +1,8 @@
 'use client';
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { PassiveRestructuring } from "@prisma/client";
-import { Ban, CheckCircle2, Clock, MoreHorizontalIcon, PauseCircle, Pencil, Trash } from "lucide-react";
+import { Ban, CheckCircle2, Clock, MoreHorizontalIcon, PauseCircle } from "lucide-react";
 import type { TableColumn } from "react-data-table-component";
 import ButtonDelete from "./button-delete";
 import { ButtonModal } from "./button-modal";

@@ -122,6 +122,8 @@ export default function ItemCard({ passiveRestructuring, additionalProvisionLeve
     const tempoEscritorio = diferencaEmMesesEDias(new Date(), new Date(passiveRestructuring.createdAt))
     const valorProvisionadoBanco = (passiveRestructuring.debtAmount * percentualAdditonal) / 100
     const paymentPlan = passiveRestructuring.debtAmount - valorProvisionadoBanco
+    const debtReduction = (1 - passiveRestructuring.debtAmount/(passiveRestructuring.finalAgreement * 100)) * 100
+    const economicBenefit = passiveRestructuring.debtAmount - passiveRestructuring.finalAgreement
 
     return (
         <div key={index}>
@@ -233,13 +235,13 @@ export default function ItemCard({ passiveRestructuring, additionalProvisionLeve
                     <div className="flex flex-col  space-y-1.5">
                         <span className="text-sm font-medium leading-none">Proposta de Acordo</span>
                         <span className="text-sm font-medium leading-none text-muted-foreground">
-                            {passiveRestructuring.settlementProposal}
+                            {passiveRestructuring.settlementProposal?.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                         </span>
                     </div>
                     <div className="flex flex-col  space-y-1.5">
                         <span className="text-sm font-medium leading-none">Acordo Final</span>
                         <span className="text-sm font-medium leading-none text-muted-foreground">
-                            {passiveRestructuring.finalAgreement}
+                            {passiveRestructuring.finalAgreement?.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                         </span>
                     </div>
                     <div className="flex flex-col  space-y-1.5">
@@ -308,13 +310,17 @@ export default function ItemCard({ passiveRestructuring, additionalProvisionLeve
                     <div className="flex flex-col  space-y-1.5">
                         <span className="text-sm font-medium leading-none">Redução da Dívida</span>
                         <span className="text-sm font-medium leading-none text-muted-foreground">
-                            CALCULADO
+                            <Badge className="flex items-center rounded-sm px-2 py-1 bg-purple-200 text-purple-800">
+                                {(debtReduction).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+                            </Badge>                                    
                         </span>
                     </div>
                     <div className="flex flex-col  space-y-1.5">
                         <span className="text-sm font-medium leading-none">Proveito Econômico</span>
                         <span className="text-sm font-medium leading-none text-muted-foreground">
-                            CALCULADO
+                            <Badge className="flex items-center rounded-sm px-2 py-1 bg-purple-200 text-purple-800">
+                                {economicBenefit.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </Badge>                                    
                         </span>
                     </div>
                     <div className="flex flex-col  space-y-1.5">

@@ -218,33 +218,30 @@ export default function PageClient({demands, clients}: {demands: Demand[], clien
       cell: (row) => (
         <div className="flex gap-2">
           <Button
-            size="sm"
-            variant="outline"
+            size="icon"
+            variant="secondary"
             onClick={() => {
               setEditingRecord(row);
               setIsOpen(true);
             }}
           >
             <Pencil className="h-4 w-4" />
-            Editar
           </Button>
           <Button
-            size="sm"
-            variant="outline"
+            size="icon"
+            variant="secondary"
             onClick={() => {
               router.push(`/admin/demandas/${row.id}`)
             }}
           >
             <List className="h-4 w-4" />
-            Passivos
           </Button>          
           <Button
-            size="sm"
+            size="icon"
             variant="destructive"
             onClick={() => handleDelete(row.id)}
           >
             <Trash className="h-4 w-4" />
-            Excluir
           </Button>
         </div>
       ),
