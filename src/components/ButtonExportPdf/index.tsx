@@ -17,7 +17,7 @@ export default function ButtonExportPdf({ data, onLoadingChange, urlReport }: Bu
       // Notificar início do loading
       onLoadingChange?.(true);
 
-      const response = await fetch(`/api/nomeacoes/report/${urlReport}`, {
+      const response = await fetch(`/api/report/${urlReport}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
