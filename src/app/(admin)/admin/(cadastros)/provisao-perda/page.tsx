@@ -45,7 +45,7 @@ function createTempRecord(record: {
 
 export default function Page() {
   const utils = api.useUtils();
-  const { data: operations } = api.provisionForIncurredLosse.list.useQuery();
+  const { data: provisionForIncurredLosse } = api.provisionForIncurredLosse.list.useQuery();
 
   // ✅ Optimistic Create + Toast
   const createRecord = api.provisionForIncurredLosse.create.useMutation({
@@ -267,8 +267,8 @@ export default function Page() {
 
       <DataTableApp
         columns={columns}
-        data={operations ?? []}
-        urlReport="/api/reports/provision-for-incurred-losses"
+        data={provisionForIncurredLosse ?? []}
+        urlReport="provision-for-incurred-losse"
       />
     </PageLayout>
   );

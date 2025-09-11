@@ -57,7 +57,7 @@ function createTempRecord(record: {
 
 export default function Page() {
   const utils = api.useUtils();
-  const { data: operations } = api.additionalProvisionLevel.list.useQuery();
+  const { data: additionalProvisionLevel } = api.additionalProvisionLevel.list.useQuery();
 
   // ✅ Optimistic Create + Toast
   const createRecord = api.additionalProvisionLevel.create.useMutation({
@@ -279,8 +279,8 @@ export default function Page() {
 
       <DataTableApp
         columns={columns}
-        data={operations ?? []}
-        urlReport="/api/reports/additional-provision-level"
+        data={additionalProvisionLevel ?? []}
+        urlReport="additional-provision-level"
       />
     </PageLayout>
   );

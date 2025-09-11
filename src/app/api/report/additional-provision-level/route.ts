@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { renderToStream } from "@react-pdf/renderer";
 import React from "react";
-import NomeacoesReportPdf from "@/app/(admin)/reports/AdicionalProvisao";
+import { AdditionalProvisionLevelPdf }  from "@/app/(admin)/reports/AdditionalProvisionLevelPdf"
 import { Readable as NodeReadable } from "stream";
 
 /**
@@ -48,23 +48,24 @@ function nodeReadableToWeb(nodeStream: NodeReadable): ReadableStream<Uint8Array>
 export async function POST(req: Request) {
   try {
     // Recebe os dados diretamente no corpo da requisição
-    const nomeacoes = await req.json();
+    const additionalProvisionLevel = await req.json();
+
 
     // Validação simples
-    if (!nomeacoes || !Array.isArray(nomeacoes)) {
+    if (!additionalProvisionLevel || !Array.isArray(additionalProvisionLevel)) {
       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
-    if (!NomeacoesReportPdf || typeof NomeacoesReportPdf !== "function") {
-      console.error("NomeacoesReportPdf inválido:", NomeacoesReportPdf);
-      return NextResponse.json({ error: "NomeacoesReportPdf inválido" }, { status: 500 });
+    if (!AdditionalProvisionLevelPdf || typeof AdditionalProvisionLevelPdf !== "function") {
+      console.error("AdditionalProvisionLevelPdf inválido:", AdditionalProvisionLevelPdf);
+      return NextResponse.json({ error: "AdditionalProvisionLevelPdf inválido" }, { status: 500 });
     }
 
     // renderToStream retorna Node Readable
     const nodeStream = (await renderToStream(
-      React.createElement(NomeacoesReportPdf, {
-        nomeacoes,
-        title: "Relatório de Nomeações",
+      React.createElement(AdditionalProvisionLevelPdf, {
+        additionalProvisionLevel,
+        title: "Níveis de provisão adicional para perda esperada",
       })
     )) as unknown as NodeReadable;
 
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
     return new NextResponse(webStream, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="relatorio-nomeacoes.pdf"`,
+        "Content-Disposition": `attachment; filename="rel-additionalProvisionLevel.pdf"`,
       },
     });
   } catch (err: any) {

@@ -11,7 +11,8 @@ interface ButtonExportPdfProps {
 }
 
 export default function ButtonExportPdf({ data, onLoadingChange, urlReport }: ButtonExportPdfProps) {
-  
+  console.log('data report,',data)
+
   const handleExportPdf = async () => {
     try {
       // Notificar início do loading

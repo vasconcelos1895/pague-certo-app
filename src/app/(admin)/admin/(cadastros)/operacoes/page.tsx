@@ -200,7 +200,7 @@ export default function Page() {
       <DataTableApp
         columns={columns}
         data={operations ?? []}
-        urlReport="/api/reports/operations"
+        urlReport="operation"
       />
     </PageLayout>
   );
