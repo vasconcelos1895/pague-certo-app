@@ -18,15 +18,22 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+  types: React.ReactNode; // obrigatório
+}
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  types = <></>, // valor padrão vazio
+}: RootLayoutProps) {
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <SessionProvider>
           <TRPCReactProvider>
             {children}
+            {types} {/* sempre existe */}
             <Toaster richColors position="top-right" />
           </TRPCReactProvider>
         </SessionProvider>

@@ -32,24 +32,24 @@ const defaultRecordValues: AdditionalProvisionLevelFormValues = {
 
 function createTempRecord(record: {
   delayPeriod: string;
-  initialDeadline?: number | null;
-  finalDeadline?: number | null;
-  percentageC1?: number | null;
-  percentageC2?: number | null;
-  percentageC3?: number | null;
-  percentageC4?: number | null;
-  percentageC5?: number | null;  
+  initialDeadline?: number;
+  finalDeadline?: number;
+  percentageC1?: number;
+  percentageC2?: number;
+  percentageC3?: number;
+  percentageC4?: number;
+  percentageC5?: number;  
 }) {
   return {
     id: "temp-id-" + Math.random().toString(36).slice(2, 2 + 9),
-    delayPeriod: record.delayPeriod,
-    percentageC1: record.percentageC1 ?? null,
-    percentageC2: record.percentageC2 ?? null,
-    percentageC3: record.percentageC3 ?? null,
-    percentageC4: record.percentageC4 ?? null,
-    percentageC5: record.percentageC5 ?? null,
-    initialDeadline: record.initialDeadline ?? null,
-    finalDeadline: record.finalDeadline ?? null,
+    delayPeriod: record.delayPeriod ?? "",
+    percentageC1: record.percentageC1 ?? 0,
+    percentageC2: record.percentageC2 ?? 0,
+    percentageC3: record.percentageC3 ?? 0,
+    percentageC4: record.percentageC4 ?? 0,
+    percentageC5: record.percentageC5 ?? 0,
+    initialDeadline: record.initialDeadline ?? 0,
+    finalDeadline: record.finalDeadline ?? 0,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
